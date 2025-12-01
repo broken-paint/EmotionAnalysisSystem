@@ -3,16 +3,28 @@
 This folder contains a minimal PyTorch training pipeline for the FER2013 dataset using a ResNet18 backbone.
 
 Files added
-- `requirements.txt`: Python dependencies
+- `requirements.txt`: Python dependencies (pip)
+- `environment.yml`: Anaconda environment specification
 - `model.py`: model factory and checkpoint loader
 - `data.py`: dataloaders using `torchvision.datasets.ImageFolder`
 - `train.py`: training script with checkpointing and fine-tune support
+- `rtsp_capture.py`: RTSP stream face detection and cropping
 
-Quick setup (recommended in a virtualenv)
+## Quick setup
 
-PowerShell example:
+### Option 1: Using Anaconda (recommended for GPU support)
+
+Create and activate the conda environment:
 ```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
+conda env create -f environment.yml
+conda activate emotion-analysis
+```
+
+### Option 2: Using venv and pip
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
@@ -41,7 +53,8 @@ Notes
 `rtsp_capture.py` captures frames from an RTSP stream, detects faces every N seconds using YOLOv8-nano, and saves cropped face images.
 
 Prerequisites
-- Install additional dependencies: `pip install -r requirements.txt` (includes `opencv-python` and `ultralytics`)
+- If using venv, run: `pip install -r requirements.txt`
+- If using conda, the dependencies are already installed via `environment.yml`
 - YOLOv8 nano face detection model will be auto-downloaded on first run
 
 Example usage (with default credentials in the RTSP URL):

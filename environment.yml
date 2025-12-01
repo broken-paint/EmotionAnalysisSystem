@@ -1,0 +1,17 @@
+name: emotion-analysis
+channels:
+  - pytorch          # 优先PyTorch官方频道
+  - conda-forge      # 其次conda-forge（兼容包更多）
+  - defaults         # 最后defaults（兜底）
+dependencies:
+  - python=3.10
+  - pip
+  - numpy>=1.24     # 固定基础包版本，避免冲突
+  - pillow>=9.0
+  - opencv
+  - pytorch=2.1.0   # 固定PyTorch版本（2.1.0适配CUDA 11.8）
+  - torchvision=0.16.0
+  - torchaudio=2.1.0
+  - pip:
+    - tqdm>=4.65.0
+    - ultralytics>=8.0.0
