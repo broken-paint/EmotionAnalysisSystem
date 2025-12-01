@@ -35,4 +35,37 @@ Notes
 - The scripts use `torchvision.datasets.ImageFolder`, so ensure the `dataset/FER2013/archive/train` and `dataset/FER2013/archive/test` folders contain subfolders per class (e.g. `happy`, `sad`).
 - Adjust `--img-size` if you prefer other input resolutions.
 - Check `--device` to force `cpu` or `cuda`.
+
+## RTSP Face Detection & Cropping
+
+`rtsp_capture.py` captures frames from an RTSP stream, detects faces every N seconds using YOLOv8-nano, and saves cropped face images.
+
+Prerequisites
+- Install additional dependencies: `pip install -r requirements.txt` (includes `opencv-python` and `ultralytics`)
+- YOLOv8 nano face detection model will be auto-downloaded on first run
+
+Example usage (with default credentials in the RTSP URL):
+```powershell
+python rtsp_capture.py
+```
+
+Custom parameters:
+```powershell
+# Run with custom RTSP URL and detection interval (20 seconds)
+python rtsp_capture.py --rtsp-url "rtsp://user:pass@192.168.1.1:554/stream" --interval 20
+
+# Run for 300 seconds with higher confidence threshold
+python rtsp_capture.py --duration 300 --confidence 0.6
+
+# Save faces to custom directory
+python rtsp_capture.py --output-dir /path/to/faces
+```
+
+Options:
+- `--rtsp-url`: RTSP stream URL (default: the provided URL)
+- `--output-dir`: Directory to save cropped faces (default: `faces`)
+- `--interval`: Detection interval in seconds (default: `10`)
+- `--confidence`: YOLOv8 confidence threshold (default: `0.5`)
+- `--duration`: Run duration in seconds; `None` = infinite (default: `None`)
+
 # EmotionAnalysisSystem
