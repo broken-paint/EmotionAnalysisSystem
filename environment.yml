@@ -9,13 +9,12 @@ dependencies:
   - pip
   - numpy>=1.24
   - pillow>=9.0
-  - opencv
   - pytorch          # install PyTorch (package without cuda build spec)
   - torchvision
   - torchaudio
   - pip:
     - tqdm>=4.65.0
-    - ultralytics>=8.0.0
+    - opencv-contrib-python
 
 # Notes:
 # - This file requests the conda package `pytorch-cuda=12.8` so conda will
