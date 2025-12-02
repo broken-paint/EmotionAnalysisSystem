@@ -1,14 +1,9 @@
-# FER2013 Emotion Recognition — Training scripts
+# EmotionAnalysisSystem
 
-This folder contains a minimal PyTorch training pipeline for the FER2013 dataset using a ResNet18 backbone.
+Identify and analyze the facial expressions of left-behind children to generate reports on their emotional trends.
 
-Files added
-- `requirements.txt`: Python dependencies (pip)
-- `environment.yml`: Anaconda environment specification
-- `model.py`: model factory and checkpoint loader
-- `data.py`: dataloaders using `torchvision.datasets.ImageFolder`
-- `train.py`: training script with checkpointing and fine-tune support
-- `rtsp_capture.py`: RTSP stream face detection and cropping
+![Static Badge](https://img.shields.io/badge/python-310?logo=python)
+
 
 ## Quick setup
 
@@ -27,6 +22,20 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
+
+## FER2013 Emotion Recognition — Training scripts
+
+This folder contains a minimal PyTorch training pipeline for the FER2013 dataset using a ResNet18 backbone.
+
+Files added
+- `requirements.txt`: Python dependencies (pip)
+- `environment.yml`: Anaconda environment specification
+- `model.py`: model factory and checkpoint loader
+- `data.py`: dataloaders using `torchvision.datasets.ImageFolder`
+- `train.py`: training script with checkpointing and fine-tune support
+- `face_detection.py`: RTSP stream face detection and cropping
+ - `face_detection.py`: OpenCV Haar Cascade face detection (image/video/webcam/RTSP)
+
 
 Training example (default expects `dataset/FER2013/archive/train` and `dataset/FER2013/archive/test`):
 ```powershell
@@ -47,38 +56,43 @@ Notes
 - The scripts use `torchvision.datasets.ImageFolder`, so ensure the `dataset/FER2013/archive/train` and `dataset/FER2013/archive/test` folders contain subfolders per class (e.g. `happy`, `sad`).
 - Adjust `--img-size` if you prefer other input resolutions.
 - Check `--device` to force `cpu` or `cuda`.
+ 
+## OpenCV Face Detection (`face_detection.py`)
 
-## RTSP Face Detection & Cropping
+`face_detection.py` provides a lightweight, CPU-friendly face detector using OpenCV's Haar Cascade. It does not require YOLO or GPU and supports image, video, webcam and RTSP sources. The script will attempt to locate a local Haar cascade and will automatically download it to `models/cascades/` if not found.
 
-`rtsp_capture.py` captures frames from an RTSP stream, detects faces every N seconds using YOLOv8-nano, and saves cropped face images.
+Basic usage examples (PowerShell):
 
-Prerequisites
-- If using venv, run: `pip install -r requirements.txt`
-- If using conda, the dependencies are already installed via `environment.yml`
-- YOLOv8 nano face detection model will be auto-downloaded on first run
-
-Example usage (with default credentials in the RTSP URL):
+- Detect faces in a single image and save crops:
 ```powershell
-python rtsp_capture.py
+python face_detection.py --source Q.jpeg --output-dir faces_opencv --save-crops
 ```
 
-Custom parameters:
+- Run on a video file (detect every 5 frames, show preview):
 ```powershell
-# Run with custom RTSP URL and detection interval (20 seconds)
-python rtsp_capture.py --rtsp-url "rtsp://user:pass@192.168.1.1:554/stream" --interval 20
-
-# Run for 300 seconds with higher confidence threshold
-python rtsp_capture.py --duration 300 --confidence 0.6
-
-# Save faces to custom directory
-python rtsp_capture.py --output-dir /path/to/faces
+python face_detection.py --source video.mp4 --interval 5 --save-crops --display
 ```
 
-Options:
-- `--rtsp-url`: RTSP stream URL (default: the provided URL)
-- `--output-dir`: Directory to save cropped faces (default: `faces`)
-- `--interval`: Detection interval in seconds (default: `10`)
-- `--confidence`: YOLOv8 confidence threshold (default: `0.5`)
-- `--duration`: Run duration in seconds; `None` = infinite (default: `None`)
+- Use RTSP stream (detect every N frames specified by `--interval`):
+```powershell
+python face_detection.py --source "rtsp://user:pass@192.168.1.1:554/stream" --interval 300 --duration 300 --save-crops
+```
 
-# EmotionAnalysisSystem
+<details open>
+<summary>rtsp stream</summary>
+
+In our project, we use `rtsp://admin:CUUNUZ@192.168.137.230:554/h264/ch1/main/av_stream` as our Ezviz monitor's rtsp stream.
+
+</details>
+
+Key options:
+- `--cascade`: Path to a Haar Cascade XML file. If omitted the script will auto-locate or download `haarcascade_frontalface_default.xml`.
+- `--scale-factor`, `--min-neighbors`, `--min-size`: Tune `detectMultiScale` parameters to reduce false positives or detect smaller faces.
+- `--interval`: For video/RTSP, detect every N frames to reduce CPU usage.
+- `--save-crops`: Save detected face crops to `--output-dir`.
+- `--display`: Show a preview window for video processing.
+
+Notes:
+- Haar Cascades are fast and suitable for lightweight detection or when GPU/YOLO is not available, but they are less accurate than modern deep-learning detectors. Use YOLO flow when higher accuracy is required.
+- Downloaded cascade files are stored under `models/cascades/` in the project for reuse.
+
