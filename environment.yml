@@ -1,17 +1,25 @@
 name: emotion-analysis
 channels:
-  - pytorch          # 优先PyTorch官方频道
-  - conda-forge      # 其次conda-forge（兼容包更多）
-  - defaults         # 最后defaults（兜底）
+  - pytorch          # 优先 PyTorch 官方频道（包含 pytorch-cuda 包）
+  - conda-forge      # 其次 conda-forge（兼容包更多）
+  - nvidia
+  - defaults         # 最后 defaults（兜底）
 dependencies:
   - python=3.10
   - pip
-  - numpy>=1.24     # 固定基础包版本，避免冲突
+  - numpy>=1.24
   - pillow>=9.0
   - opencv
-  - pytorch=2.1.0   # 固定PyTorch版本（2.1.0适配CUDA 11.8）
-  - torchvision=0.16.0
-  - torchaudio=2.1.0
+  - pytorch          # install PyTorch (package without cuda build spec)
+  - torchvision
+  - torchaudio
   - pip:
     - tqdm>=4.65.0
     - ultralytics>=8.0.0
+
+# Notes:
+# - This file requests the conda package `pytorch-cuda=12.8` so conda will
+#   install CUDA-enabled PyTorch compatible with CUDA 12.8. If your conda
+#   channels don't provide that build, you can adjust the CUDA version here
+#   to one available for your platform (e.g. 11.8, 12.1) or install torch via pip
+#   after creating the env.
