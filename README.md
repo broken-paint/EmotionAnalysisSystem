@@ -7,20 +7,10 @@ Identify and analyze the facial expressions of left-behind children to generate 
 
 ## Quick setup
 
-### Option 1: Using Anaconda (recommended for GPU support)
-
 Create and activate the conda environment:
 ```powershell
 conda env create -f environment.yml
 conda activate emotion-analysis
-```
-
-### Option 2: Using venv and pip
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
 ```
 
 ## FER2013 Emotion Recognition — Training scripts
