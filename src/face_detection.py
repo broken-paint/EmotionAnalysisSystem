@@ -50,10 +50,11 @@ class OpenCVFaceDetector:
             crop = frame[y:y+h, x:x+w]
             if crop.size == 0:
                 continue
+            resize = cv2.resize(crop, (48, 48))
             ts = datetime.now().strftime('%Y%m%d_%H%M%S_%f')[:-3]
             fname = f"{prefix}_{ts}_{w}x{h}.jpg"
             path = os.path.join(output_dir, fname)
-            cv2.imwrite(path, crop)
+            cv2.imwrite(path, resize)
             count += 1
         return count
     
