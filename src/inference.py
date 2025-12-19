@@ -240,7 +240,7 @@ def main():
                        help='Input image or video file')
     parser.add_argument('--model', type=str, default='checkpoints/best.pth',
                        help='Path to best.pth model checkpoint')
-    parser.add_argument('--output-dir', type=str, default='results',
+    parser.add_argument('--output-dir', type=str, default='results\\emotion',
                        help='Output directory for results and visualizations')
     parser.add_argument('--device', type=str, default='cpu',
                        choices=['cpu', 'cuda'],
