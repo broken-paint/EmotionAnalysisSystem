@@ -8,7 +8,7 @@ from datetime import datetime
 class OpenCVFaceDetector:
     """Detect and crop faces using OpenCV Haar Cascade classifier."""
     
-    def __init__(self, cascade_path=None, scale_factor=1.1, min_neighbors=5, min_size=(30, 30)):
+    def __init__(self, cascade_path=None, scale_factor=1.1, min_neighbors=10, min_size=(300, 300)):
         """
         Initialize face detector.
         
@@ -20,7 +20,7 @@ class OpenCVFaceDetector:
         """
         # Try to load default cascade if not provided
         if cascade_path is None:
-            cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+            cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml'
         
         self.face_cascade = cv2.CascadeClassifier(cascade_path)
         if self.face_cascade.empty():
@@ -246,10 +246,10 @@ def main():
                         default='rtsp://admin:CUUNUZ@192.168.137.230:554/h264/ch1/main/av_stream', 
                         help='Source: image path, video path, rtsp:// URL, or webcam id (0)')
     parser.add_argument('--cascade', default=None, help='Path to Haar Cascade XML file (default: frontal face)')
-    parser.add_argument('--output-dir', default='faces_opencv', help='Directory to save crops and results')
+    parser.add_argument('--output-dir', default='result/faces', help='Directory to save crops and results')
     parser.add_argument('--scale-factor', type=float, default=1.1, help='Scale factor for detectMultiScale')
-    parser.add_argument('--min-neighbors', type=int, default=5, help='Min neighbors for detectMultiScale')
-    parser.add_argument('--min-size', type=int, nargs=2, default=[30, 30], help='Minimum face size (width height)')
+    parser.add_argument('--min-neighbors', type=int, default=10, help='Min neighbors for detectMultiScale')
+    parser.add_argument('--min-size', type=int, nargs=2, default=[300, 300], help='Minimum face size (width height)')
     parser.add_argument('--interval', type=int, default=10, help='Detect every N frames (video/RTSP)')
     parser.add_argument('--duration', type=int, default=None, help='Run duration in seconds (webcam/RTSP)')
     parser.add_argument('--save-crops', action='store_true', help='Save cropped faces')
