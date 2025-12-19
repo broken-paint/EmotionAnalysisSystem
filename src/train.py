@@ -6,8 +6,8 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 
-from utils.model import get_model
-from utils.data import get_dataloaders
+from model.model import get_model
+from model.data import get_dataloaders
 
 
 def save_checkpoint(state, is_best, output_dir, filename='checkpoint.pth'):

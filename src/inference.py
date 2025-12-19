@@ -12,8 +12,8 @@ import torch
 from torchvision import transforms
 import numpy as np
 
-from src.face_detection import OpenCVFaceDetector
-from utils.model import load_checkpoint
+from face_detection import OpenCVFaceDetector
+from model.model import load_checkpoint
 
 
 # Emotion class names (from FER2013 dataset)

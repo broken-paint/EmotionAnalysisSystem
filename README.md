@@ -29,17 +29,17 @@ Files added
 
 Training example (default expects `dataset/FER2013/archive/train` and `dataset/FER2013/archive/test`):
 ```powershell
-python train.py --data-dir dataset/FER2013/archive --epochs 20 --batch-size 64 --output checkpoints
+python src/train.py --data-dir dataset/FER2013/archive --epochs 20 --batch-size 64 --output checkpoints
 ```
 
 Fine-tuning example (load a checkpoint's model weights only):
 ```powershell
-python train.py --data-dir dataset/FER2013/archive --pretrained-weights checkpoints/best.pth --epochs 10
+python src/train.py --data-dir dataset/FER2013/archive --pretrained-weights checkpoints/best.pth --epochs 10
 ```
 
 Resume full training (loads optimizer and scheduler states):
 ```powershell
-python train.py --data-dir dataset/FER2013/archive --resume checkpoints/checkpoint_epoch10.pth --epochs 20
+python src/train.py --data-dir dataset/FER2013/archive --resume checkpoints/checkpoint_epoch10.pth --epochs 20
 ```
 
 Notes
