@@ -29,17 +29,17 @@ Files added
 
 Training example (default expects `dataset/FER2013/archive/train` and `dataset/FER2013/archive/test`):
 ```powershell
-python ./src/train.py --data-dir dataset/FER2013/archive --epochs 20 --batch-size 64 --output checkpoints
+python ./backend/src/train.py --data-dir dataset/FER2013/archive --epochs 20 --batch-size 64 --output checkpoints
 ```
 
 Fine-tuning example (load a checkpoint's model weights only):
 ```powershell
-python ./src/train.py --data-dir dataset/FER2013/archive --pretrained-weights checkpoints/best.pth --epochs 10
+python ./backend/src/train.py --data-dir dataset/FER2013/archive --pretrained-weights checkpoints/best.pth --epochs 10
 ```
 
 Resume full training (loads optimizer and scheduler states):
 ```powershell
-python ./src/train.py --data-dir dataset/FER2013/archive --resume checkpoints/checkpoint_epoch10.pth --epochs 20
+python ./backend/src/train.py --data-dir dataset/FER2013/archive --resume checkpoints/checkpoint_epoch10.pth --epochs 20
 ```
 
 Notes
@@ -55,17 +55,17 @@ Basic usage examples (PowerShell):
 
 - Detect faces in a single image and save crops:
 ```powershell
-python ./src/face_detection.py --source Q.jpeg --output-dir faces_opencv --save-crops
+python ./backend/src/face_detection.py --source Q.jpeg --output-dir faces_opencv --save-crops
 ```
 
 - Run on a video file (detect every 5 frames, show preview):
 ```powershell
-python ./src/face_detection.py --source video.mp4 --interval 5 --save-crops --display
+python ./backend/src/face_detection.py --source video.mp4 --interval 5 --save-crops --display
 ```
 
 - Use RTSP stream (detect every N frames specified by `--interval`):
 ```powershell
-python face_detection.py --source "rtsp://user:pass@192.168.1.1:554/stream" --interval 300 --duration 300 --save-crops
+python ./backend/src/face_detection.py --source "rtsp://user:pass@192.168.1.1:554/stream" --interval 300 --duration 300 --save-crops
 ```
 
 <details open>
