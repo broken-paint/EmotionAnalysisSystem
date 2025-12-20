@@ -130,12 +130,16 @@ def run_stream(source, model_path, output_dir, interval=5, device='cpu', display
 
 
 def main():
+    current_path = os.path.abspath(__file__)
+    current_dir = os.path.dirname(current_path)
+    parent_dir = os.path.dirname(current_dir)
+
     parser = argparse.ArgumentParser(description='Run continuous face -> emotion inference')
     parser.add_argument('--source', type=str, 
                         default='rtsp://admin:CUUNUZ@192.168.137.230:554/h264/ch1/main/av_stream', 
                         help='Webcam id, video file, or RTSP URL')
-    parser.add_argument('--model', type=str, default='checkpoints/best.pth', help='Path to model checkpoint')
-    parser.add_argument('--output-dir', type=str, default='results\\emotion', help='Directory to save outputs')
+    parser.add_argument('--model', type=str, default=parent_dir+'\\checkpoints\\best.pth', help='Path to model checkpoint')
+    parser.add_argument('--output-dir', type=str, default=parent_dir+'\\results\\emotion', help='Directory to save outputs')
     parser.add_argument('--interval', type=int, default=10, help='Detect every Nth frame')
     parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'], help='Device for inference')
     parser.add_argument('--no-display', action='store_true', help='Disable display window')

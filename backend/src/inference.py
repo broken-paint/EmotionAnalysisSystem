@@ -233,14 +233,18 @@ def process_video(video_path, face_detector, emotion_predictor, output_dir, inte
 
 
 def main():
+    current_path = os.path.abspath(__file__)
+    current_dir = os.path.dirname(current_path)
+    parent_dir = os.path.dirname(current_dir)
+
     parser = argparse.ArgumentParser(
         description='Emotion detection inference using best.pth model'
     )
     parser.add_argument('--input', type=str, required=True,
                        help='Input image or video file')
-    parser.add_argument('--model', type=str, default='checkpoints/best.pth',
+    parser.add_argument('--model', type=str, default=parent_dir+'\\checkpoints\\best.pth',
                        help='Path to best.pth model checkpoint')
-    parser.add_argument('--output-dir', type=str, default='results\\emotion',
+    parser.add_argument('--output-dir', type=str, default=parent_dir+'\\results\\emotion',
                        help='Output directory for results and visualizations')
     parser.add_argument('--device', type=str, default='cpu',
                        choices=['cpu', 'cuda'],
