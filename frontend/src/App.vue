@@ -16,6 +16,8 @@ import MyEmotionCount from './components/EmotionCount.vue'
 </template>
 
 <style scoped>
+@import "tailwindcss";
+
 .container {
   display: flex;
   gap: 20px;
