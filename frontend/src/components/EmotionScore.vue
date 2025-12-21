@@ -86,5 +86,8 @@ div {
   border-radius: 20px; 
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
-canvas { width: 100%; height: 100%; }
+canvas { 
+  width: 100%; 
+  height: 100%; 
+}
 </style>

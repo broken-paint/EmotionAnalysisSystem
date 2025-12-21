@@ -10,12 +10,8 @@ import MyEmotionCount from './components/EmotionCount.vue'
 
 <template>
   <div class="container">
-    <span>
-      <MyEmotionScore class="item"></MyEmotionScore>
-    </span>
-    <span>
-      <MyEmotionCount class="item"></MyEmotionCount>
-    </span>
+    <MyEmotionScore class="item"></MyEmotionScore>
+    <MyEmotionCount class="item"></MyEmotionCount>
   </div>
 </template>
 
@@ -23,6 +19,8 @@ import MyEmotionCount from './components/EmotionCount.vue'
 .container {
   display: flex;
   gap: 20px;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 .item {
   flex-grow: 1;

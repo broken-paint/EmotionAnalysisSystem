@@ -121,8 +121,8 @@ div {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-canvas {
-  max-width: 500px;
-  max-height: 500px;
+canvas { 
+  width: 100%; 
+  height: 100%; 
 }
 </style>
