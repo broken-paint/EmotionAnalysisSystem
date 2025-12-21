@@ -39,7 +39,6 @@ class EmotionPredictor:
                                 std=[0.229, 0.224, 0.225])
         ])
         print(f"[INFO] Loaded model from {model_path}")
-    
     def predict(self, face_crop):
         """
         Predict emotion from a face crop image.
@@ -86,7 +85,29 @@ class EmotionPredictor:
             }
 
 
-def process_image(image_path, face_detector, emotion_predictor, output_dir):
+def save_face_crop(output_dir, face_crop, source_name, idx):
+    """
+    Save a face crop to the output crops directory with a unique name.
+
+    Args:
+        output_dir: base output directory
+        face_crop: image array (BGR)
+        source_name: original source name (image file or video identifier)
+        idx: face index to include in filename
+
+    Returns:
+        Path to the saved crop image.
+    """
+    crop_dir = os.path.join(output_dir, 'crops')
+    os.makedirs(crop_dir, exist_ok=True)
+    base = os.path.splitext(os.path.basename(source_name))[0]
+    fname = f"{base}_crop_{idx}.jpg"
+    path = os.path.join(crop_dir, fname)
+    cv2.imwrite(path, face_crop)
+    return path
+
+
+def process_image(image_path, face_detector, emotion_predictor, output_dir, save_crops=True):
     """
     Process image file, detect faces, and predict emotions.
     
@@ -125,20 +146,21 @@ def process_image(image_path, face_detector, emotion_predictor, output_dir):
             'confidence': float(prediction['confidence']),
             'all_emotions': {k: float(v) for k, v in prediction['scores'].items()}
         }
+
+        label = f"{face_result['emotion']} {face_result['confidence']:.2f}"
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.putText(frame, label, (x, y+20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+        if save_crops:
+            crop_path = save_face_crop(output_dir, face_crop, image_path, idx)
+            face_result['crop_path'] = crop_path
         
         results['faces'].append(face_result)
-    
-    # Save visualization
-    frame_marked = face_detector.draw_faces(frame, faces)
-    vis_filename = f"emotion_{os.path.basename(image_path)}"
-    vis_path = os.path.join(output_dir, vis_filename)
-    cv2.imwrite(vis_path, frame_marked)
-    results['visualization'] = vis_path
     
     return results
 
 
-def process_video(video_path, face_detector, emotion_predictor, output_dir, interval=10):
+def process_video(video_path, face_detector, emotion_predictor, output_dir, interval=10, save_crops=True):
     """
     Process video file, detect faces per frame, and predict emotions.
     
@@ -215,7 +237,11 @@ def process_video(video_path, face_detector, emotion_predictor, output_dir, inte
                     'confidence': float(prediction['confidence']),
                     'all_emotions': {k: float(v) for k, v in prediction['scores'].items()}
                 }
-                
+                if save_crops:
+                    crop_name = f"{os.path.basename(video_path)}_frame{frame_idx}"
+                    crop_path = save_face_crop(output_dir, face_crop, crop_name, idx)
+                    face_result['crop_path'] = crop_path
+
                 frame_result['faces'].append(face_result)
             
             results['frames'].append(frame_result)
