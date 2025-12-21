@@ -9,22 +9,12 @@ import MyEmotionCount from './components/EmotionCount.vue'
 </script>
 
 <template>
-  <div class="container">
-    <MyEmotionScore class="item"></MyEmotionScore>
-    <MyEmotionCount class="item"></MyEmotionCount>
+  <div class="flex gap-[20px] justify-around flex-wrap">
+    <MyEmotionScore class="max-w-[50%] flex-grow"></MyEmotionScore>
+    <MyEmotionCount class="max-w-[50%] flex-grow"></MyEmotionCount>
   </div>
 </template>
 
 <style scoped>
 @import "tailwindcss";
-
-.container {
-  display: flex;
-  gap: 20px;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
-.item {
-  flex-grow: 1;
-}
 </style>
