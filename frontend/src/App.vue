@@ -9,9 +9,9 @@ import MyEmotionCount from './components/EmotionCount.vue'
 </script>
 
 <template>
-  <div class="flex gap-[20px] justify-around flex-wrap">
-    <MyEmotionScore class="max-w-[50%] flex-grow"></MyEmotionScore>
-    <MyEmotionCount class="max-w-[50%] flex-grow"></MyEmotionCount>
+  <div class="ml-[150px] mr-[150px] flex gap-[50px] justify-around flex-wrap">
+    <MyEmotionScore class="max-w-[60%] flex-grow"></MyEmotionScore>
+    <MyEmotionCount class="max-w-[40%] flex-grow"></MyEmotionCount>
   </div>
 </template>
 
