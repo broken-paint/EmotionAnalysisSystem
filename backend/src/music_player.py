@@ -1,5 +1,6 @@
 import pygame
 import os
+import json
 from typing import List
 
 class MusicPlayer:
@@ -16,14 +17,14 @@ class MusicPlayer:
     def load_playlist(self, folder_path: str) -> None:
         """
         加载指定文件夹下的音频文件到播放列表
-        支持格式：mp3, wav, ogg
+        支持格式：mp3, wav, ogg, flac
         """
-        supported_formats = ('.mp3', '.wav', '.ogg')
+        supported_formats = ('.mp3', '.wav', '.ogg', '.flac')
         self.playlist.clear()
         
         # 检查文件夹是否存在
         if not os.path.exists(folder_path):
-            print(f"错误：文件夹 {folder_path} 不存在！")
+            print(f"[ERROR] {folder_path} Doesn't exist！")
             return
         
         # 遍历文件夹，收集音频文件
@@ -32,9 +33,40 @@ class MusicPlayer:
                 self.playlist.append(os.path.join(folder_path, file))
         
         if not self.playlist:
-            print("警告：指定文件夹中未找到支持的音频文件！")
+            print("[WARNING] Can't find any music files in the folder！")
         else:
-            print(f"成功加载 {len(self.playlist)} 首曲目到播放列表")
+            print(f"[INFO] Succsessfully loaded {len(self.playlist)} music files")
+
+    def load_playlist_by_emotion(self, results_json_path: str, music_base_path: str = "./resources/music") -> None:
+        """
+        从emotion结果JSON文件读取most_frequent_emotion字段，
+        并根据该情绪加载对应的音乐播放列表
+        
+        Args:
+            results_json_path: stream_results.json文件的路径
+            music_base_path: 音乐文件夹的基础路径
+        """
+        try:
+            with open(results_json_path, 'r', encoding='utf-8') as f:
+                results = json.load(f)
+            
+            emotion = results.get('most_frequent_emotion')
+            if not emotion:
+                print("[ERROR] Can't found most_frequent_emotion!")
+                return
+            
+            # 构建音乐文件夹路径
+            emotion_music_path = os.path.join(music_base_path, emotion)
+            
+            # 加载该情绪对应的播放列表
+            self.load_playlist(emotion_music_path)
+            
+        except FileNotFoundError:
+            print(f"[ERROR] Can't Found {results_json_path}！")
+        except json.JSONDecodeError:
+            print(f"[Error] {results_json_path} is invalid!")
+        except Exception as e:
+            print(f"[ERROR] {e}")
 
     def play_song(self, index: int = None) -> None:
         """
@@ -42,7 +74,7 @@ class MusicPlayer:
         """
         # 处理播放列表为空的情况
         if not self.playlist:
-            print("错误：播放列表为空，请先加载音频文件！")
+            print("[ERROR] playlist is empty！")
             return
         
         # 确定要播放的曲目索引
@@ -50,7 +82,7 @@ class MusicPlayer:
             if 0 <= index < len(self.playlist):
                 self.current_song_index = index
             else:
-                print(f"错误：索引 {index} 超出播放列表范围！")
+                print(f"[ERROR] {index} is out of range！")
                 return
         elif self.current_song_index == -1:
             # 首次播放，默认播放第一首
@@ -113,39 +145,43 @@ class MusicPlayer:
 
 # 测试播放器
 if __name__ == "__main__":
+    current_path = os.path.abspath(__file__)
+    current_dir = os.path.dirname(current_path)
+    parent_dir = os.path.dirname(current_dir)
+
     # 创建播放器实例
     player = MusicPlayer()
     
-    # 替换为你的音频文件文件夹路径（绝对路径/相对路径均可）
-    music_folder = "./music"  # 示例：当前目录下的music文件夹
-    player.load_playlist(music_folder)
+    results_json_path = parent_dir+"/results/emotion/stream_results.json"
+    music_base_path = parent_dir+"/resources/music"
+    player.load_playlist_by_emotion(results_json_path, music_base_path)
     
     # 简单的交互演示
     print("\n=== 音乐播放器操作说明 ===")
-    print("1. 播放：play")
-    print("2. 暂停：pause")
-    print("3. 恢复：resume")
-    print("4. 下一首：next")
-    print("5. 上一首：prev")
-    print("6. 停止：stop")
-    print("7. 退出：exit")
+    print("1. 播放")
+    print("2. 暂停")
+    print("3. 恢复")
+    print("4. 下一首")
+    print("5. 上一首")
+    print("6. 停止")
+    print("7. 退出")
     print("==========================\n")
     
     while True:
-        command = input("请输入操作命令：").strip().lower()
-        if command == "play":
+        command = int(input("请输入操作序号：").strip())
+        if command == 1:
             player.play_song()
-        elif command == "pause":
+        elif command == 2:
             player.pause_song()
-        elif command == "resume":
+        elif command == 3:
             player.resume_song()
-        elif command == "next":
+        elif command == 4:
             player.next_song()
-        elif command == "prev":
+        elif command == 5:
             player.prev_song()
-        elif command == "stop":
+        elif command == 6:
             player.stop_song()
-        elif command == "exit":
+        elif command == 7:
             player.stop_song()
             print("退出播放器")
             break
