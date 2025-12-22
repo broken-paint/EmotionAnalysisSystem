@@ -16,12 +16,14 @@ from inference import EmotionPredictor
 # Emotion class names (from FER2013 dataset)
 EMOTION_CLASSES = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
-def run_stream(source, model_path, output_dir, interval=5, device='cpu', display=True, save_json=True, save_crops=False, debug=False):
+def run_stream(source, model_path, output_dir, interval=5, duration=10, device='cpu', display=True, save_json=True, save_crops=False, debug=False):
     os.makedirs(output_dir, exist_ok=True)
 
     # Initialize detector and predictor
     detector = OpenCVFaceDetector()
     predictor = EmotionPredictor(model_path, device=device)
+
+    start_time = datetime.now()
 
     # Open capture
     try:
@@ -115,6 +117,11 @@ def run_stream(source, model_path, output_dir, interval=5, device='cpu', display
                 results['frames'].append(frame_result)
                 processed += 1
 
+        # Check duration
+        if duration is not None and (datetime.now() - start_time).total_seconds() > duration:
+            print('[INFO] Duration limit reached')
+            break
+
         if display:
             cv2.imshow('Emotion Stream', frame)
             key = cv2.waitKey(1) & 0xFF
@@ -153,6 +160,7 @@ def main():
     parser.add_argument('--model', type=str, default=parent_dir+'\\checkpoints\\best.pth', help='Path to model checkpoint')
     parser.add_argument('--output-dir', type=str, default=parent_dir+'\\results\\emotion', help='Directory to save outputs')
     parser.add_argument('--interval', type=int, default=10, help='Detect every Nth frame')
+    parser.add_argument('--duration', type=int, default=10, help='Run duration in seconds')
     parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'], help='Device for inference')
     parser.add_argument('--no-display', action='store_true', help='Disable display window')
     parser.add_argument('--no-json', action='store_true', help='Disable saving aggregated JSON results')
@@ -166,6 +174,7 @@ def main():
         model_path=args.model,
         output_dir=args.output_dir,
         interval=args.interval,
+        duration=args.duration,
         device=args.device,
         display=(not args.no_display),
         save_json=(not args.no_json),
