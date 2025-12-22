@@ -16,7 +16,7 @@ from inference import EmotionPredictor
 # Emotion class names (from FER2013 dataset)
 EMOTION_CLASSES = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
-def run_stream(source, model_path, output_dir, interval=5, device='cpu', display=True, save_json=True, save_crops=False):
+def run_stream(source, model_path, output_dir, interval=5, device='cpu', display=True, save_json=True, save_crops=False, debug=False):
     os.makedirs(output_dir, exist_ok=True)
 
     # Initialize detector and predictor
@@ -64,7 +64,9 @@ def run_stream(source, model_path, output_dir, interval=5, device='cpu', display
             time.sleep(0.5)
             continue
         consecutive_failures = 0
-        # print(f"[DEBUG] Read frame {frame_idx}")
+
+        if debug:
+            print(f"[DEBUG] Read frame {frame_idx}")
 
         if frame_idx % interval == 0:
             faces = detector.detect_faces(frame)
@@ -81,7 +83,8 @@ def run_stream(source, model_path, output_dir, interval=5, device='cpu', display
 
                 resize = cv2.resize(face_crop, (48, 48))
                 pred = predictor.predict(resize)
-                print(f"[DEBUG] emotion {pred.get('emotion', 'unknown')}")
+                if debug:
+                    print(f"[DEBUG] emotion {pred.get('emotion', 'unknown')}")
                 
                 emotion_counts[pred.get('emotion', 'unknown')] += 1
 
