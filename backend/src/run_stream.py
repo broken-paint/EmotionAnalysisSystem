@@ -13,6 +13,8 @@ import cv2
 from face_detection import OpenCVFaceDetector
 from inference import EmotionPredictor
 
+# Emotion class names (from FER2013 dataset)
+EMOTION_CLASSES = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
 def run_stream(source, model_path, output_dir, interval=5, device='cpu', display=True, save_json=True, save_crops=False):
     os.makedirs(output_dir, exist_ok=True)
@@ -46,6 +48,8 @@ def run_stream(source, model_path, output_dir, interval=5, device='cpu', display
     processed = 0
     consecutive_failures = 0
     max_failures = 10
+    
+    emotion_counts = {emotion: 0 for emotion in EMOTION_CLASSES}
 
     print(f"[INFO] Started stream from {source}. Press 'q' to quit.")
 
@@ -78,6 +82,8 @@ def run_stream(source, model_path, output_dir, interval=5, device='cpu', display
                 resize = cv2.resize(face_crop, (48, 48))
                 pred = predictor.predict(resize)
                 print(f"[DEBUG] emotion {pred.get('emotion', 'unknown')}")
+                
+                emotion_counts[pred.get('emotion', 'unknown')] += 1
 
                 face_entry = {
                     'id': idx,
@@ -117,6 +123,9 @@ def run_stream(source, model_path, output_dir, interval=5, device='cpu', display
     cap.release()
     if display:
         cv2.destroyAllWindows()
+
+    results['emotion_counts'] = emotion_counts
+    results['most_frequent_emotion'] = max(emotion_counts, key=emotion_counts.get) if emotion_counts else None
 
     # Save aggregated results
     if save_json:

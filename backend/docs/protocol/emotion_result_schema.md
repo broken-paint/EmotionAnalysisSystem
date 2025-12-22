@@ -2,7 +2,7 @@
 
 `results\emotion`的使用方法及各字段说明
 
-请使用 `emotion` 字段作为识别结果
+请使用 `emotion` 字段作为每一帧的识别结果，`most_frequent_emotion` 字段为每一次推流的识别结果
 
 ::: warning
 JSON 文件是不支持注释的，文本中的注释仅用于演示，请勿直接复制使用
@@ -41,6 +41,16 @@ JSON 文件是不支持注释的，文本中的注释仅用于演示，请勿直
                 }
             ]
         }
-    ]
+    ],
+    "emotion_counts": {                                     // 各个表情计数
+        "angry": 1,
+        "disgust": 1,
+        "fear": 4,
+        "happy": 5,
+        "neutral": 1,
+        "sad": 4,
+        "surprise": 1
+    },
+    "most_frequent_emotion": "happy"                        // 最多出现的表情
 }
 ```
