@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import MyEmotionScore from './EmotionScore.vue'
 import MyEmotionCount from './EmotionCount.vue'
-
-
 </script>
 
 <template>
