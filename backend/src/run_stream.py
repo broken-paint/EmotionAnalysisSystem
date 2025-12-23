@@ -3,7 +3,9 @@ import sys
 import time
 import argparse
 import json
+import asyncio
 from datetime import datetime
+from fastapi import FastAPI
 
 # Ensure local src directory is on path so relative imports work when run from repo root
 sys.path.insert(0, os.path.dirname(__file__))
@@ -13,10 +15,20 @@ import cv2
 from face_detection import OpenCVFaceDetector
 from inference import EmotionPredictor
 
+app = FastAPI()
+
 # Emotion class names (from FER2013 dataset)
 EMOTION_CLASSES = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
-def run_stream(source, model_path, output_dir, interval=5, duration=10, device='cpu', display=True, save_json=True, save_crops=False, debug=False):
+current_path = os.path.abspath(__file__)
+current_dir = os.path.dirname(current_path)
+parent_dir = os.path.dirname(current_dir)
+
+DEFAULT_SOURCE = 'rtsp://admin:CUUNUZ@192.168.137.230:554/h264/ch1/main/av_stream'
+DEFAULT_MODEL = os.path.join(parent_dir, 'checkpoints', 'best.pth')
+DEFAULT_OUTPUT_DIR = os.path.join(parent_dir, 'results', 'emotion')
+
+def run_stream_core(source, model_path, output_dir, interval=5, duration=10, device='cpu', display=True, save_json=True, save_crops=False, debug=False):
     os.makedirs(output_dir, exist_ok=True)
 
     # Initialize detector and predictor
@@ -146,7 +158,24 @@ def run_stream(source, model_path, output_dir, interval=5, duration=10, device='
         print(f"[INFO] Saved JSON results to {out_path}")
 
     print(f"[INFO] Stopped. Processed {processed} frames with faces")
+    return results
 
+@app.get("/detect_emotion")
+async def run_stream_api(source: str = DEFAULT_SOURCE,
+                         model_path: str = DEFAULT_MODEL,
+                         output_dir: str = DEFAULT_OUTPUT_DIR,
+                         interval: int = 10,
+                         duration: int = 10,
+                         device: str = 'cpu',
+                         display: bool = False,
+                         save_json: bool = True,
+                         save_crops: bool = False,
+                         debug: bool = False):
+    """API endpoint wrapper that runs the streaming core in a background thread.
+    All parameters are optional and default to the same values used by the CLI.
+    """
+    results = await asyncio.to_thread(run_stream_core, source, model_path, output_dir, interval, duration, device, display, save_json, save_crops, debug)
+    return results
 
 def main():
     current_path = os.path.abspath(__file__)
@@ -169,7 +198,7 @@ def main():
     args = parser.parse_args()
 
     
-    run_stream(
+    run_stream_core(
         source=args.source,
         model_path=args.model,
         output_dir=args.output_dir,
