@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-gray-50 h-full flex items-center justify-center p-4 relative" style="min-height: inherit;">
     <!-- 主容器 -->
     <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden">
       <!-- 顶部横幅 -->
@@ -35,7 +35,7 @@
     <footer class="absolute bottom-4 text-gray-500 text-sm">
       © 2025 Left-behind Children's Emotion Analysis System
     </footer>
-  </body>
+  </div>
 </template>
 
 <style scoped>
