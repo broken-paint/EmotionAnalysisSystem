@@ -186,8 +186,8 @@ def main():
     parser.add_argument('--source', type=str, 
                         default='rtsp://admin:CUUNUZ@192.168.137.230:554/h264/ch1/main/av_stream', 
                         help='Webcam id, video file, or RTSP URL')
-    parser.add_argument('--model', type=str, default=parent_dir+'\\checkpoints\\best.pth', help='Path to model checkpoint')
-    parser.add_argument('--output-dir', type=str, default=parent_dir+'\\results\\emotion', help='Directory to save outputs')
+    parser.add_argument('--model', type=str, default=os.path.join(parent_dir, 'checkpoints', 'best.pth'), help='Path to model checkpoint')
+    parser.add_argument('--output-dir', type=str, default=os.path.join(parent_dir, 'results', 'emotion'), help='Directory to save outputs')
     parser.add_argument('--interval', type=int, default=10, help='Detect every Nth frame')
     parser.add_argument('--duration', type=int, default=10, help='Run duration in seconds')
     parser.add_argument('--device', type=str, default='cpu', choices=['cpu', 'cuda'], help='Device for inference')

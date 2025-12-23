@@ -251,7 +251,7 @@ def main():
                         default='rtsp://admin:CUUNUZ@192.168.137.230:554/h264/ch1/main/av_stream', 
                         help='Source: image path, video path, rtsp:// URL, or webcam id (0)')
     parser.add_argument('--cascade', default=None, help='Path to Haar Cascade XML file (default: frontal face)')
-    parser.add_argument('--output-dir', default=parent_dir+'\\results\\faces', help='Directory to save crops and results')
+    parser.add_argument('--output-dir', default=os.path.join(parent_dir, 'results', 'faces'), help='Directory to save crops and results')
     parser.add_argument('--scale-factor', type=float, default=1.1, help='Scale factor for detectMultiScale')
     parser.add_argument('--min-neighbors', type=int, default=10, help='Min neighbors for detectMultiScale')
     parser.add_argument('--min-size', type=int, nargs=2, default=[300, 300], help='Minimum face size (width height)')

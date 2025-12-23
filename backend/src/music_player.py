@@ -152,8 +152,8 @@ if __name__ == "__main__":
     # 创建播放器实例
     player = MusicPlayer()
     
-    results_json_path = parent_dir+"/results/emotion/stream_results.json"
-    music_base_path = parent_dir+"/resources/music"
+    results_json_path = os.path.join(parent_dir, "results", "emotion", "stream_results.json")
+    music_base_path = os.path.join(parent_dir, "resources", "music")
     player.load_playlist_by_emotion(results_json_path, music_base_path)
     
     # 简单的交互演示

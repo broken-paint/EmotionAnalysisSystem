@@ -268,9 +268,9 @@ def main():
     )
     parser.add_argument('--input', type=str, required=True,
                        help='Input image or video file')
-    parser.add_argument('--model', type=str, default=parent_dir+'\\checkpoints\\best.pth',
+    parser.add_argument('--model', type=str, default=os.path.join(parent_dir, 'checkpoints', 'best.pth'),
                        help='Path to best.pth model checkpoint')
-    parser.add_argument('--output-dir', type=str, default=parent_dir+'\\results\\emotion',
+    parser.add_argument('--output-dir', type=str, default=os.path.join(parent_dir, 'results', 'emotion'),
                        help='Output directory for results and visualizations')
     parser.add_argument('--device', type=str, default='cpu',
                        choices=['cpu', 'cuda'],
