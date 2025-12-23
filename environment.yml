@@ -15,6 +15,7 @@ dependencies:
   - pip:
     - tqdm>=4.65.0
     - opencv-contrib-python
+    - pygame
 
 # Notes:
 # - This file requests the conda package `pytorch-cuda=12.8` so conda will
